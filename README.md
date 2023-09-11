@@ -1,43 +1,39 @@
-# guide-rpc-framework
 
-## 前言
 
-虽说 RPC 的原理实际不难，但是，自己在实现的过程中自己也遇到了很多问题。[guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 目前只实现了 RPC 框架最基本的功能，一些可优化点都在下面提到了，有兴趣的小伙伴可以自行完善。
-
-通过这个简易的轮子，你可以学到 RPC 的底层原理和原理以及各种 Java 编码实践的运用。
+The underlying principles and principles of RPC and the application of various Java coding practices.
 
 
 
-1. **注册中心** ：注册中心首先是要有的，推荐使用 Zookeeper。注册中心负责服务地址的注册与查找，相当于目录服务。服务端启动的时候将服务名称及其对应的地址(ip+port)注册到注册中心，服务消费端根据服务名称找到对应的服务地址。有了服务地址之后，服务消费端就可以通过网络请求服务端了。
-2. **网络传输** ：既然要调用远程的方法就要发请求，请求中至少要包含你调用的类名、方法名以及相关参数吧！推荐基于 NIO 的 Netty 框架。
-3. **序列化** ：既然涉及到网络传输就一定涉及到序列化，你不可能直接使用 JDK 自带的序列化吧！JDK 自带的序列化效率低并且有安全漏洞。 所以，你还要考虑使用哪种序列化协议，比较常用的有 hession2、kyro、protostuff。
-4. **动态代理** ： 另外，动态代理也是需要的。因为 RPC 的主要目的就是让我们调用远程方法像调用本地方法一样简单，使用动态代理可以屏蔽远程方法调用的细节比如网络传输。也就是说当你调用远程方法的时候，实际会通过代理对象来传输网络请求，不然的话，怎么可能直接就调用到远程方法呢？
-5. **负载均衡** ：负载均衡也是需要的。为啥？举个例子我们的系统中的某个服务的访问量特别大，我们将这个服务部署在了多台服务器上，当客户端发起请求的时候，多台服务器都可以处理这个请求。那么，如何正确选择处理该请求的服务器就很关键。假如，你就要一台服务器来处理该服务的请求，那该服务部署在多台服务器的意义就不复存在了。负载均衡就是为了避免单个服务器响应同一请求，容易造成服务器宕机、崩溃等问题，我们从负载均衡的这四个字就能明显感受到它的意义。
-6. ......
+1. **Registration Center**: The first thing to have is a registration center. It is recommended to use Zookeeper. The registration center is responsible for the registration and search of service addresses, which is equivalent to directory services. When the server starts, the service name and its corresponding address (ip+port) are registered in the registration center, and the service consumer finds the corresponding service address based on the service name. After having the service address, the service consumer can request the server through the network.
+2. **Network transmission**: Since you want to call a remote method, you must send a request. The request must at least contain the class name, method name and related parameters you call! The Netty framework based on NIO is recommended.
+3. **Serialization**: Since network transmission is involved, serialization must be involved. You cannot directly use the serialization that comes with JDK! The serialization that comes with the JDK is inefficient and has security vulnerabilities. Therefore, you also need to consider which serialization protocol to use. The more commonly used ones are hession2, kyro, and protostuff.
+4. **Dynamic Agent**: In addition, dynamic agent is also needed. Because the main purpose of RPC is to make calling remote methods as simple as calling local methods, using a dynamic proxy can shield the details of remote method calls such as network transmission. That is to say, when you call a remote method, the network request will actually be transmitted through the proxy object. Otherwise, how could the remote method be called directly?
+5. **Load Balancing**: Load balancing is also needed. Why? For example, a service in our system has a particularly large number of visits. We have deployed this service on multiple servers. When a client initiates a request, multiple servers can handle the request. Then, how to correctly choose the server to handle the request is critical. If you need one server to handle requests for the service, then the meaning of deploying the service on multiple servers no longer exists. Load balancing is to prevent a single server from responding to the same request, which can easily cause server downtime, crashes and other problems. We can clearly feel its meaning from the four words of load balancing.
+6.......
 
-### 项目基本情况和可优化点
+###Basic situation of the project and optimization points
 
-基于传统的 **BIO** 的方式 **Socket** 进行网络传输，然后利用 **JDK 自带的序列化机制** 来实现这个 RPC 框架的
+Based on the traditional **BIO** method **Socket** for network transmission, and then using the **JDK's own serialization mechanism** to implement this RPC framework
 
-**Java** ：
+**Java**:
 
-1. 动态代理机制；
-2. 序列化机制以及各种序列化框架的对比，比如 hession2、kyro、protostuff。
-3. 线程池的使用；
-4. `CompletableFuture` 的使用
-5. ......
+1. Dynamic proxy mechanism;
+2. Comparison of serialization mechanisms and various serialization frameworks, such as hession2, kyro, and protostuff.
+3. Use of thread pool;
+4. Use of `CompletableFuture`
+5.......
 
-**Netty** ：
+**Netty**:
 
-1. 使用 Netty 进行网络传输；
-2. `ByteBuf` 介绍
-3. Netty 粘包拆包
-4. Netty 长连接和心跳机制
+1. Use Netty for network transmission;
+2. Introduction to `ByteBuf`
+3. Netty sticky package unpacking
+4. Netty long connection and heartbeat mechanism
 
 **Zookeeper** :
 
-1. 基本概念；
-2. 数据结构；
-3. 如何使用 Netflix 公司开源的 zookeeper 客户端框架 Curator 进行增删改查；
+1. Basic concepts;
+2. Data structure;
+3. How to use Netflix’s open source zookeeper client framework Curator to perform additions, deletions, modifications, and queries;
 
 
